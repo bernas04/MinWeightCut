@@ -1,7 +1,4 @@
 import random
-from itertools import combinations
-
-
  
 
 class Graph:
@@ -112,10 +109,4 @@ class Problem:
                     cost+=i
         return cost
                 
-        
-        
-
-        
-
-
-    
+  

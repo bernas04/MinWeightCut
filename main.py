@@ -1,4 +1,5 @@
 import random
+import os
 import time
 from models import Problem
 
@@ -11,24 +12,37 @@ INDEX = 2
 
 
 if __name__ == '__main__':
+    os.makedirs('InformationTime', exist_ok=True)
+    os.chdir('InformationTime')
+    contador=0
     for i in range(4,100):
+        contador+=1
         start = time.time()
         random.seed(STUDENT_NUMBER)
         nodesNumber = random.randint(2,i)
         nodesNumber = i # comentar depois
         edgesNumber = round(nodesNumber / EDGES_PERCENTAGE[i%4])
+        
+        f = open(
+            "G"+str(contador)+
+            "V"+str(nodesNumber)+
+            "E"+str(edgesNumber)+
+            ".txt", "w"
+            )
 
-        print("[MAIN] Creating Graph with {} nodes and {} edges".format(nodesNumber, edgesNumber))
-
+        print("Graph with {} nodes and {} edges\n".format(nodesNumber, edgesNumber))
+        f.write("Creating Graph with {} nodes and {} edges".format(nodesNumber, edgesNumber))
         p = Problem(nodesNumber,edgesNumber)
         
         solution, subsetA, subsetB = p.solveProblem()
 
-        print("[MAIN] Cost {}".format(solution))
-        print("[MAIN] SubSet A {}".format(subsetA))
-        print("[MAIN] SubSet B {}".format(subsetB))
-        print("[MAIN] Elapsed Time {}".format(time.time() - start))
-        print("\n\n")
+        end = time.time()
+        f.write("Cost {}\n".format(solution))
+        f.write("Subset A {}\n".format(subsetA))
+        f.write("Subset B {}\n".format(subsetB))
+        f.write("Elapsed time {}\n".format(end-start))
+        f.write("\n")
+        f.close()
 
 
     
