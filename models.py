@@ -1,4 +1,7 @@
+from collections import defaultdict
 import random
+import matplotlib.pyplot as plt
+import networkx as nx
  
 
 class Graph:
@@ -6,56 +9,130 @@ class Graph:
     def __init__(self, nodes, edges):
         self.numberOfNodes = nodes
         self.numberOfEdges = edges
-
-        self.nodes = [(i,(random.randint(1,20), random.randint(1,20))) for i in range(self.numberOfNodes)]
-        self.connections={}
-        isConnex = False
         
+        self.nodesPositions = self.buildNodes(self.numberOfNodes) # {'a': (16, 2), 'b': (5, 11), 'c': (1, 12), 'd': (13, 10)}
+        self.edges_positions = self.buildEdges(self.numberOfEdges)
+
+        self.adjecyMatrix = defaultdict(list)
+
+        self.nxGraph = nx.Graph()
+
+
+
+
+    def drawGraph(self, contador):
+        print(self.nxGraph.nodes)
+        for node1, node2 in self.edges_positions.keys():
+            self.nxGraph.add_edge(node1, node2, weight=self.edges_positions[(node1, node2)][0])
+        print(self.nodesPositions)
+        for node in self.nodesPositions.keys():
+            self.nxGraph.add_node(node, pos=self.nodesPositions[node])
+        
+        edge_labels = nx.get_edge_attributes(self.nxGraph, "weight")
+        pos = nx.get_node_attributes(self.nxGraph, "pos")
+        nx.draw_networkx_edge_labels(self.nxGraph, pos, edge_labels)
+        
+        nx.draw(
+            self.nxGraph, 
+            pos,
+            with_labels=True,
+            )
+
+        plt.savefig(f"G{contador}V{self.numberOfNodes}E{self.numberOfEdges}.png", format="PNG")
+        plt.close()
+        #plt.show()
+
+
+
+        
+        
+
+    
+    def buildNodes(self, n_nodes):
+        index = 97 # código ascii para a letra a
+        nodes_positions = {}
+
+        for i in range(n_nodes):
+            nodes_positions[chr(index+i)] = (random.randint(1,20), random.randint(1,20))
+
+        return nodes_positions
+        
+        
+    def buildEdges(self, n_edges):
+        isConnex = False
+
+        nodes = [chr(i) for i in range(97,97+self.numberOfNodes)]
         while(not isConnex):
-            for i in range(self.numberOfEdges):
+            connections = {}
+            for i in range(n_edges):
                 # escolhe aleatoriamente dois nós
-                node1 = random.choice(self.nodes)
-                node2 = random.choice(self.nodes)
+                node1 = random.choice(nodes)
+                node2 = random.choice(nodes)
+                while(node1 == node2):
+                    node2 = random.choice(nodes)
 
                 # forma o tuplo com os dois nós
-                aresta = (node1[0], node2[0])
+                aresta = (node1, node2)
                 aresta = tuple(sorted(aresta))
 
                 # calcula a distância entre os nós
                 distance = self.calculateDistance(node1, node2)
 
-                if aresta not in self.connections:
-                    self.connections[aresta] = [distance]
+                if aresta not in connections:
+                    connections[aresta] = [distance]
                 else:
-                    self.connections[aresta].append(distance)
-            isConnex = self.connexGraph(nodes)
+                    connections[aresta].append(distance)
+            isConnex = self.connexGraph(nodes, connections)
 
-        #print("Conections: ", self.connections)
-        #print("Nodes: ", self.nodes)
+        return connections
+       
+
+
+
         
-    
+    def buildAdjecyMatrix(self):
+        """ Build adjecy matrix """
+
+        for node1,node2 in self.edges_positions.keys():
+            self.adjecyMatrix[node1].append(node2) 
+            self.adjecyMatrix[node2].append(node1) if node2!=node1 else None
+        
+        self.adjecyMatrix = sorted(self.adjecyMatrix.items())
+        return self.adjecyMatrix
+
+
+
     
     def calculateDistance(self, node1, node2):
         """ Calculate distance between two nodes """
-        return ((node1[1][0] - node2[1][0])**2 + (node1[1][1] - node2[1][1])**2)**0.5
+        x1, y1 = self.nodesPositions[node1]
+        x2, y2 = self.nodesPositions[node2]
 
-    def connexGraph(self, nodes):
+        return round(((y2 - y1)**2 + (x2-x1)**2)**0.5, 2)
+
+    def connexGraph(self, nodes, connections):
         """ Check if graph is connex """
-        eachNode = [i for i in range(nodes)]
-        connection = [i for i in self.connections.keys()]
+        
+        connection = [i for i in connections.keys()]
         out = set([item for t in connection for item in t])
         
-        if (set(eachNode).difference(set(out))):
+        if (set(nodes).difference(set(out))):
             return False
         return True
 
 
 class Problem:
     
-    def __init__(self, nodes, edges):
+    def __init__(self, nodes, edges, contador):
         self.nodes= nodes
         self.edges= edges
         self.graph = Graph(nodes, edges)
+        self.graph.drawGraph(contador)
+        self.adejcyMatrix = self.graph.buildAdjecyMatrix()
+        
+
+    def solveProblemWithHeuristic(self):
+        pass
         
 
 
@@ -83,11 +160,11 @@ class Problem:
         bestSubSetA=""
         bestSubSetB=""
 
-        self.allCombination = self.getAllCutCombination([i for i in range(self.graph.numberOfNodes)])
+        self.allCombination = self.getAllCutCombination([chr(i) for i in range(97, 97 + self.graph.numberOfNodes)])
         
         for subSetA in self.allCombination:
-            subSetB = [j for j in range(self.graph.numberOfNodes) if j not in subSetA]
-            x = self.calculateCost(subSetA, subSetB, self.graph.connections)
+            subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if j not in subSetA]
+            x = self.calculateCost(subSetA, subSetB, self.graph.edges_positions)
             if x < minCost:
                 minCost = x
                 bestSubSetA = subSetA
