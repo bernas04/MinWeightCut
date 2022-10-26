@@ -8,6 +8,8 @@ __pycache__/
 
 # Information files
 InformationTime
+InformationTimeGreedy
+
 
 # Distribution / packaging
 .Python

@@ -1,4 +1,5 @@
 from collections import defaultdict
+import itertools
 import random
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -136,11 +137,6 @@ class Problem:
         self.adejcyMatrix = self.graph.buildAdjecyMatrix()
         
 
-    def solveProblemWithHeuristic(self):
-        pass
-        
-
-
 
     def getAllCutCombination(self, nodes):
         """ Get all possible combination of cut 
@@ -150,10 +146,12 @@ class Problem:
         allCombinations = [[]]
         for i in nodes:
             allCombinations+=[lst + [i] for lst in allCombinations]
+
+        # remove the empty subconjuction and the subconjuction with all nodes
         allCombinations.remove([])
-        for i in allCombinations:
-            if len(i) == len(nodes):
-                allCombinations.remove(i)    
+        allCombinations.remove([chr(i) for i in range(97,97+self.nodes)])
+           
+        
         return allCombinations
 
 
@@ -192,4 +190,56 @@ class Problem:
                     cost+=i
         return cost
                 
+
+class GreedySolution:
+    
+    def __init__(self, nodes, edges, contador) -> None:
+        self.nodes = nodes
+        self.edges = edges
+        self.contador = contador
+        self.graph = Graph(nodes, edges)
+        self.adjencyMatrix = self.graph.buildAdjecyMatrix()
+        self.adjencyMatrix = sorted(self.adjencyMatrix, key=lambda x: len(x[1]))
+
+    def solveProblem(self, position):
+        minCost = 400
+        bestSubSetA=""
+        bestSubSetB=""
+
+        self.allCombinations = self.getAllCutCombinations([chr(i) for i in range(97, 97 + self.graph.numberOfNodes)], self.adjencyMatrix[0][0])
+
+
+        for subSetA in self.allCombinations:
+            subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if chr(j) not in subSetA]
+            
+
+            x = self.calculateCost(subSetA, subSetB, self.graph.edges_positions)
+                
+            if x < minCost:
+                minCost = x
+                bestSubSetA = subSetA
+                bestSubSetB = subSetB
+            
+        return minCost, bestSubSetA, bestSubSetB
+
+
+    def calculateCost(self, conjA, conjB, connections):
+        cost = 0
+        for node1, node2 in connections:
+            if (node1 in conjA and node2 in conjB) or (node1 in conjB and node2 in conjA):
+                for i in connections[(node1, node2)]:
+                    cost+=i
+        return cost
+
+
+    def getAllCutCombinations(self, nodes, node):
+        allCombinations = []
+
+        for i in range(1, len(nodes)):
+                allCombinations += list(itertools.combinations(nodes, i))
+
+        [allCombinations.remove(i) for i in list(allCombinations) if node not in i]
+        
+        return allCombinations
+
   
