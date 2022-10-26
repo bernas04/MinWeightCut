@@ -21,10 +21,8 @@ class Graph:
 
 
     def drawGraph(self, contador):
-        print(self.nxGraph.nodes)
         for node1, node2 in self.edges_positions.keys():
             self.nxGraph.add_edge(node1, node2, weight=self.edges_positions[(node1, node2)][0])
-        print(self.nodesPositions)
         for node in self.nodesPositions.keys():
             self.nxGraph.add_node(node, pos=self.nodesPositions[node])
         
@@ -40,7 +38,6 @@ class Graph:
 
         plt.savefig(f"G{contador}V{self.numberOfNodes}E{self.numberOfEdges}.png", format="PNG")
         plt.close()
-        #plt.show()
 
 
 
@@ -68,22 +65,30 @@ class Graph:
                 # escolhe aleatoriamente dois nós
                 node1 = random.choice(nodes)
                 node2 = random.choice(nodes)
-                while(node1 == node2):
+                while(node1 == node2 ):
                     node2 = random.choice(nodes)
 
                 # forma o tuplo com os dois nós
                 aresta = (node1, node2)
                 aresta = tuple(sorted(aresta))
+                
+                # para não permitir mais que uma aresta entre dois nós
+                while (aresta in connections):
+                    node1 = random.choice(nodes)
+                    node2 = random.choice(nodes)
+                    while(node1 == node2 ):
+                        node2 = random.choice(nodes)
+                    aresta = (node1, node2)
+                    aresta = tuple(sorted(aresta))
 
                 # calcula a distância entre os nós
                 distance = self.calculateDistance(node1, node2)
 
+
                 if aresta not in connections:
                     connections[aresta] = [distance]
-                else:
-                    connections[aresta].append(distance)
+                
             isConnex = self.connexGraph(nodes, connections)
-
         return connections
        
 
@@ -163,8 +168,9 @@ class Problem:
         self.allCombination = self.getAllCutCombination([chr(i) for i in range(97, 97 + self.graph.numberOfNodes)])
         
         for subSetA in self.allCombination:
-            subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if j not in subSetA]
+            subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if chr(j) not in subSetA]
             x = self.calculateCost(subSetA, subSetB, self.graph.edges_positions)
+            
             if x < minCost:
                 minCost = x
                 bestSubSetA = subSetA

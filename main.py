@@ -2,7 +2,6 @@ import random
 import os
 import time
 from models import Problem
-import sys
 
 
 
@@ -17,7 +16,6 @@ if __name__ == '__main__':
 
 
     for i in range(4,20):
-        
         start = time.time()
         random.seed(STUDENT_NUMBER)
 
@@ -50,7 +48,6 @@ if __name__ == '__main__':
                 f.write("Adjency Matrix {}\n".format(p.graph.adjecyMatrix))
                 f.write("Elapsed time {}s\n".format(end-start))
                 f.close()
-        print("\n")
         
 
 
