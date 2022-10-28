@@ -200,27 +200,36 @@ class GreedySolution:
         self.graph = Graph(nodes, edges)
         self.adjencyMatrix = self.graph.buildAdjecyMatrix()
         self.adjencyMatrix = sorted(self.adjencyMatrix, key=lambda x: len(x[1]))
+        self.minEdges = len(self.adjencyMatrix[0][1])
 
-    def solveProblem(self, position):
-        minCost = 400
+    def solveProblem(self):
+        minCost = 40000
         bestSubSetA=""
         bestSubSetB=""
 
-        self.allCombinations = self.getAllCutCombinations([chr(i) for i in range(97, 97 + self.graph.numberOfNodes)], self.adjencyMatrix[0][0])
 
+        for i in self.adjencyMatrix:
+            if len(i[1]) == self.minEdges:
+                # i -> nó com menos arestas
+                # connectedNodes -> nós ligados ao nó i
+                connectedNodes = i[1]
+                self.adjencyMatrix.remove(i)
+                self.combination = self.getAllCutCombination(list(connectedNodes) + list(i[0]))
+                                
+                for subSetA in self.combination:
+                    subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if chr(j) not in subSetA]
+                    
 
-        for subSetA in self.allCombinations:
-            subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if chr(j) not in subSetA]
-            
+                    x = self.calculateCost(subSetA, subSetB, self.graph.edges_positions)
+                        
+                    if x < minCost:
+                        minCost = x
+                        bestSubSetA = subSetA
+                        bestSubSetB = subSetB
 
-            x = self.calculateCost(subSetA, subSetB, self.graph.edges_positions)
-                
-            if x < minCost:
-                minCost = x
-                bestSubSetA = subSetA
-                bestSubSetB = subSetB
-            
         return minCost, bestSubSetA, bestSubSetB
+
+        
 
 
     def calculateCost(self, conjA, conjB, connections):
@@ -232,13 +241,19 @@ class GreedySolution:
         return cost
 
 
-    def getAllCutCombinations(self, nodes, node):
-        allCombinations = []
+    def getAllCutCombination(self, nodes):
+        """ Get all possible combination of cut 
+            It is important to remember that any subconjunction can be empty
+        """
+        
+        allCombinations = [[]]
+        for i in nodes:
+            allCombinations+=[lst + [i] for lst in allCombinations]
 
-        for i in range(1, len(nodes)):
-                allCombinations += list(itertools.combinations(nodes, i))
-
-        [allCombinations.remove(i) for i in list(allCombinations) if node not in i]
+        # remove the empty subconjuction and the subconjuction with all nodes
+        allCombinations.remove([])
+        allCombinations.remove(nodes)
+           
         
         return allCombinations
 

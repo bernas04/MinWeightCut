@@ -1,3 +1,4 @@
+import sys, getopt
 import random
 import os
 import time
@@ -9,15 +10,31 @@ STUDENT_NUMBER = 98679
 EDGES_PERCENTAGE = [0.125, 0.25, 0.50, 0.75]
 
 
-if __name__ == '__main__':
-    """ os.makedirs('InformationTime', exist_ok=True)
+
+def main(argv):
+    mode=''
+    try:
+        opts, args = getopt.getopt(argv,"hm:",["mode="])
+    except getopt.GetoptError:
+        print('main.py -m <solution>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-m", "--mode"):
+            mode = arg
+        else:
+            print('main.py -m <solution>')
+            sys.exit()
+    
+    return mode
+
+def exhaustiveSearch():
+    """ Exhaustive search """
+    os.makedirs('InformationTime', exist_ok=True)
     os.chdir('InformationTime')
     contador=0
 
 
     for i in range(4,20):
-        start = time.time()
-        random.seed(STUDENT_NUMBER)
 
 
         nodesNumber=i
@@ -35,14 +52,14 @@ if __name__ == '__main__':
                     ".txt", "w"
                     )
 
-                print(">> G({}N {}E)".format(nodesNumber, edgesNumber), end="\r")
+                print(">> G({}N,{}E)".format(nodesNumber, edgesNumber), end="\r")
                 f.write("{}N {}E\n".format(nodesNumber, edgesNumber))
                 
                 p = Problem(nodes=nodesNumber,edges=edgesNumber, contador=contador)
                 
-                #p = GreedySolution(nodes=nodesNumber, edges=edgesNumber, contador=contador)
-                
                 solution, subsetA, subsetB = p.solveProblem()
+
+                
 
                 end = time.time()
                 f.write("Cost {}\n".format(solution))
@@ -51,17 +68,20 @@ if __name__ == '__main__':
                 f.write("Adjency Matrix {}\n".format(p.graph.adjecyMatrix))
                 f.write("Elapsed time {}s\n".format(end-start))
                 f.close()
+    os.chdir('../')
+    
+    
 
-    os.chdir('../') """
+def greedySearch():
+    """ Greedy search """
     os.makedirs('InformationTimeGreedy', exist_ok=True)
     os.chdir('InformationTimeGreedy')
 
     contador=0
 
-    for i in range(4,25):
-        start = time.time()
-        random.seed(STUDENT_NUMBER)
-
+    for i in range(4,20):
+        
+        
         nodesNumber=i
         maxEdges = (nodesNumber*(nodesNumber-1))/2
 
@@ -77,12 +97,12 @@ if __name__ == '__main__':
                     ".txt", "w"
                     )
 
-                print(">> G({}N {}E)".format(nodesNumber, edgesNumber))
+                print(">> G({}N {}E)".format(nodesNumber, edgesNumber), end="\r")
                 f.write("{}N {}E\n".format(nodesNumber, edgesNumber))
                 
                 p = GreedySolution(nodes=nodesNumber, edges=edgesNumber, contador=contador)
                 
-                solution, subsetA, subsetB = p.solveProblem("asd")
+                solution, subsetA, subsetB = p.solveProblem()
 
                 end = time.time()
                 f.write("Cost {}\n".format(solution))
@@ -91,6 +111,22 @@ if __name__ == '__main__':
                 f.write("Adjency Matrix {}\n".format(p.graph.adjecyMatrix))
                 f.write("Elapsed time {}s\n".format(end-start))
                 f.close()
+    os.chdir('../')
+
+
+if __name__ == '__main__':
+    
+    mode = main(sys.argv[1:])
+
+    random.seed(STUDENT_NUMBER)
+    start = time.time()
+
+    if mode.lower() == 'exhaustive':
+        print('Exhaustive Solution')
+        exhaustiveSearch()
+    elif mode.lower() == 'greedy':
+        print('Greedy Solution')
+        greedySearch()
 
         
 
