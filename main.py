@@ -13,28 +13,31 @@ EDGES_PERCENTAGE = [0.125, 0.25, 0.50, 0.75]
 
 def main(argv):
     mode=''
+    nodes=16
     try:
-        opts, args = getopt.getopt(argv,"hm:",["mode="])
+        opts, args = getopt.getopt(argv,"hm:n:",["mode=", "nodes="])
     except getopt.GetoptError:
-        print('main.py -m <solution>')
+        print('python3 main.py -m [GREEDY/EXHAUSTIVE] -n [MAX NODES NUMBER]')
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-m", "--mode"):
             mode = arg
+        elif opt in ("-n", "--nodes"):
+            nodes = int(arg)
         else:
-            print('main.py -m <solution>')
+            print('python3 main.py -m [GREEDY/EXHAUSTIVE] -n [MAX NODES NUMBER]')
             sys.exit()
     
-    return mode
+    return mode, nodes
 
-def exhaustiveSearch():
+def exhaustiveSearch(numberOfNodes):
     """ Exhaustive search """
-    os.makedirs('InformationTime', exist_ok=True)
-    os.chdir('InformationTime')
+    os.makedirs('InformationTimeExhaustive', exist_ok=True)
+    os.chdir('InformationTimeExhaustive')
     contador=0
 
 
-    for i in range(4,20):
+    for i in range(4,numberOfNodes):
 
 
         nodesNumber=i
@@ -72,14 +75,14 @@ def exhaustiveSearch():
     
     
 
-def greedySearch():
+def greedySearch(numberOfNodes):
     """ Greedy search """
     os.makedirs('InformationTimeGreedy', exist_ok=True)
     os.chdir('InformationTimeGreedy')
 
     contador=0
 
-    for i in range(4,20):
+    for i in range(4,numberOfNodes):
         
         
         nodesNumber=i
@@ -116,17 +119,17 @@ def greedySearch():
 
 if __name__ == '__main__':
     
-    mode = main(sys.argv[1:])
+    mode, numberOfNodes = main(sys.argv[1:])
 
     random.seed(STUDENT_NUMBER)
     start = time.time()
 
     if mode.lower() == 'exhaustive':
         print('Exhaustive Solution')
-        exhaustiveSearch()
+        exhaustiveSearch(numberOfNodes)
     elif mode.lower() == 'greedy':
         print('Greedy Solution')
-        greedySearch()
+        greedySearch(numberOfNodes)
 
         
 

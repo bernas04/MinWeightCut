@@ -30,8 +30,41 @@ pip install -r requirements.txt
 
 4. Run **main.py** file:
 ```python
-python3 main.py
+python3 main.py -m [GREEDY/EXHAUSTIVE] -n [MAX NODES NUMBER]
 ```
+
+By default `MAX NODES NUMBER` is 16, so if the user doesn't specify, it is assumed that number. 
+
+
+## Bibliography
+<table>
+    <tr>
+        <td>[1]</td>
+        <td>https://www.youtube.com/watch?v=4Ih3UhVuEtw</td>
+        <td>Visited 18/10/2022</td>
+    </tr>
+    <tr>
+        <td>[2]</td>
+        <td>https://math.mit.edu/~goemans/18433S07/mincut.pdf</td>
+        <td>Visited 20/10/2022</td>
+    </tr>
+    <tr>
+        <td>[3]</td>
+        <td>https://en.wikipedia.org/wiki/Minimum_cut</td>
+        <td>Visited 22/10/2022</td>
+    </tr>
+    <tr>
+        <td>[4]</td>
+        <td>https://nx.dev/nx/dep-graph</td>
+        <td>Visited 28/10/2022</td>
+    </tr>
+    <tr>
+        <td>[4]</td>
+        <td>https://docs.python.org/3/library/getopt.html</td>
+        <td>Visited 17/10/2022</td>
+    </tr>
+</table>
+
 
 
 
