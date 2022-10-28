@@ -33,6 +33,7 @@ pip install -r requirements.txt
 python3 main.py -m [GREEDY/EXHAUSTIVE] -n [MAX NODES NUMBER]
 ```
 
+**Attention:**
 By default `MAX NODES NUMBER` is 16, so if the user doesn't specify, it is assumed that number. 
 
 
