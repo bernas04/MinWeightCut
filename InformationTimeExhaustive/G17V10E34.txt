@@ -1,0 +1,8 @@
+10N 34E
+Cost 23.35
+Subset A ['h']
+Subset B ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'j']
+Adjency Matrix [('a', ['b', 'c', 'e', 'd', 'h', 'g', 'j']), ('b', ['e', 'g', 'a', 'f', 'i', 'j', 'c']), ('c', ['g', 'd', 'a', 'e', 'f', 'h', 'b', 'i']), ('d', ['g', 'f', 'c', 'j', 'e', 'h', 'a', 'i']), ('e', ['b', 'i', 'f', 'd', 'c', 'a', 'j']), ('f', ['j', 'd', 'e', 'i', 'b', 'c']), ('g', ['b', 'd', 'c', 'j', 'i', 'a']), ('h', ['d', 'j', 'a', 'c']), ('i', ['e', 'g', 'f', 'j', 'b', 'd', 'c']), ('j', ['f', 'g', 'i', 'd', 'b', 'h', 'e', 'a'])]
+Elapsed time 2.3428540229797363s
+Basic Operations 1022
+Number of solutions 1

@@ -1,0 +1,8 @@
+4N 4E
+Cost 8.0
+Subset A ['c']
+Subset B ['a', 'b', 'd']
+Adjency Matrix [('a', ['d', 'c']), ('b', ['c', 'd']), ('c', ['b', 'a']), ('d', ['a', 'b'])]
+Elapsed time 0.0004069805145263672s
+Basic Operations 2
+Number of solutions 1

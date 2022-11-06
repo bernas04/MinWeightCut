@@ -60,7 +60,7 @@ def exhaustiveSearch(numberOfNodes):
                 
                 p = Problem(nodes=nodesNumber,edges=edgesNumber, contador=contador)
                 
-                solution, subsetA, subsetB = p.solveProblem()
+                solution, subsetA, subsetB, basicOperations, nSolutions = p.solveProblem()
 
                 
 
@@ -70,6 +70,8 @@ def exhaustiveSearch(numberOfNodes):
                 f.write("Subset B {}\n".format(subsetB))
                 f.write("Adjency Matrix {}\n".format(p.graph.adjecyMatrix))
                 f.write("Elapsed time {}s\n".format(end-start))
+                f.write("Basic Operations {}\n".format(basicOperations))
+                f.write("Number of solutions {}\n".format(nSolutions))
                 f.close()
     os.chdir('../')
     
@@ -105,7 +107,7 @@ def greedySearch(numberOfNodes):
                 
                 p = GreedySolution(nodes=nodesNumber, edges=edgesNumber, contador=contador)
                 
-                solution, subsetA, subsetB = p.solveProblem()
+                solution, subsetA, subsetB, basic_operations, nSolutions = p.solveProblem()
 
                 end = time.time()
                 f.write("Cost {}\n".format(solution))
@@ -113,6 +115,8 @@ def greedySearch(numberOfNodes):
                 f.write("Subset B {}\n".format(subsetB))
                 f.write("Adjency Matrix {}\n".format(p.graph.adjecyMatrix))
                 f.write("Elapsed time {}s\n".format(end-start))
+                f.write("Basic Operations {}\n".format(basic_operations))
+                f.write("Number of solutions {}\n".format(nSolutions))
                 f.close()
     os.chdir('../')
 

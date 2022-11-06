@@ -162,10 +162,13 @@ class Problem:
         minCost = 400
         bestSubSetA=""
         bestSubSetB=""
+        contador = 0
+        nSolution = 0
 
         self.allCombination = self.getAllCutCombination([chr(i) for i in range(97, 97 + self.graph.numberOfNodes)])
         
         for subSetA in self.allCombination:
+            contador+=1
             subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if chr(j) not in subSetA]
             x = self.calculateCost(subSetA, subSetB, self.graph.edges_positions)
             
@@ -173,8 +176,10 @@ class Problem:
                 minCost = x
                 bestSubSetA = subSetA
                 bestSubSetB = subSetB
+            elif x == minCost:
+                nSolution+=1
         
-        return minCost, bestSubSetA, bestSubSetB
+        return minCost, bestSubSetA, bestSubSetB, contador, nSolution
 
     def calculateCost(self, conjA, conjB, connections):
         """ Calculate cost of two subconjuctions
@@ -203,19 +208,22 @@ class GreedySolution:
         self.minEdges = len(self.adjencyMatrix[0][1])
 
     def solveProblem(self):
+        nSolutions = 0
         minCost = 40000
         bestSubSetA=""
         bestSubSetB=""
-
+        contador=0
 
         for i in self.adjencyMatrix:
             if len(i[1]) == self.minEdges:
                 # i -> nó com menos arestas
                 # connectedNodes -> nós ligados ao nó i
+                contador+=1
+                
                 connectedNodes = i[1]
                 self.adjencyMatrix.remove(i)
                 self.combination = self.getAllCutCombination(list(connectedNodes) + list(i[0]))
-                                
+                
                 for subSetA in self.combination:
                     subSetB = [chr(j) for j in range(97, 97 + self.graph.numberOfNodes) if chr(j) not in subSetA]
                     
@@ -226,8 +234,10 @@ class GreedySolution:
                         minCost = x
                         bestSubSetA = subSetA
                         bestSubSetB = subSetB
+                    elif x == minCost:
+                        nSolutions+=1
 
-        return minCost, bestSubSetA, bestSubSetB
+        return minCost, bestSubSetA, bestSubSetB, contador, nSolutions
 
         
 
